@@ -1,0 +1,39 @@
+<%-include("layouts/head.ejs", {title:"Category"})%>
+<%-include("layouts/header.ejs")%>
+<%-include("layouts/menu.ejs")%>
+<%-include("layouts/slider.ejs")%>
+
+                <!--	List Product	-->
+                <div class="products">
+                    <h3><%=category.title%> (hiện có <%=total%> sản phẩm)</h3>
+                    <div class="product-list card-deck">
+                    <% for(let product of products) { %>
+                    <%-include("components/productItemComponent.ejs", {item:product})%>
+                    <% } %>
+                     </div>
+                    </div>
+                <!--	End List Product	-->
+                
+                <div id="pagination">
+                    <ul class="pagination">
+                        <% if(page > 1) { %>
+                        <li class="page-item"><a class="page-link" href="/category-<%= category.slug %>.<%= category._id %>?page=<%= page - 1 %>">Trang trước</a></li>
+                        <% } %>
+                    <% for(let num of pages) { %>
+                        <% if(num === "...") { %>
+                        <li class="page-item <%=num===page?'active':''%>"><span class="page-link"><%=num%></span></li>
+                        <% } else { %>
+                        <li   li class="page-item <%= num === page ? 'active' : '' %>"><a class="page-link" href="/category-<%= category.slug %>.<%= category._id %>?page=<%= num %>"><%= num %></a></li>
+                        <% } %>
+                    <% } %>
+                    <% if(page < totalPages) { %>
+                        <li class="page-item"><a class="page-link" href="/category-<%= category.slug %>.<%= category._id %>?page=<%= page + 1 %>">Trang sau</a></li>
+                    <% } %>
+                    </ul> 
+                </div>
+
+                
+            </div>
+            
+            <%-include("layouts/sidebar.ejs")%>
+<%-include("layouts/footer.ejs")%>

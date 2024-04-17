@@ -1,0 +1,118 @@
+<%-include("../layout/head.ejs", {title: "Comment Manager"})%>
+<%-include("../layout/header.ejs")%>
+<%-include("../layout/sidebar.ejs")%>
+
+
+	
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/admin/dashboard"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li class="active">Danh sách bình luận</li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Danh sách bình luận</h1>
+			</div>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+                        <form action="/admin/comments/delete-selected" id="selectForm" method="post"> 
+                            <table 
+                            data-toolbar="#toolbar"
+                            data-toggle="table">
+						    <thead>
+						    <tr>
+						        <th data-field="id" data-sortable="true">ID</th>
+						        <th data-field="full_name"  data-sortable="true">Họ và tên</th>
+                                <th data-field="email" data-sortable="true">Email</th>
+                                <th>Tên sản phẩm</th>
+                                <th data-field="content" data-sortable="true">Nội dung</th>
+                                <th data-field="status">Thời gian</th>
+                                <th data-field="body">Hành động</th>
+                                <th data-field="checkbox">Chọn nhiều</th>
+
+						    </tr>
+                            </thead>
+                            <tbody>
+                                <%for(let comment of comments){%>
+                                    <tr>
+                                        <td><%=count+=1%></td>
+                                        <td style=""><%=comment.full_name%></td>
+                                        <td style=""><%=comment.email%></td>
+                                        <td><%=comment?.prd_id?.name%></td>
+                                        <td style=""><%=comment.body%></td>
+                                        <td style=""><%= moment(comment.createdAt).locale('vi').fromNow()%></td>
+                                        <td class="form-group">
+                                            <a href="/admin/comments/approve/<%=comment._id%>" class="btn <%=comment?.role?'btn-success':'btn-warning'%>"><%=comment?.role?"Đã Phê duyệt":"Chưa phê duyệt"%> <i class="glyphicon glyphicon-ok"></i></a>
+                                            <a href="/admin/comments/edit/<%=comment._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a onclick="deleteOne('<%=comment._id%>')"  class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                        </td>
+                                        <td>
+                                            <input class="selected-unbox" type="checkbox" name="selectedComments[]" value="<%= comment._id %>">
+                                        </td>
+                                    </tr>
+                                    <%}%>
+                                 </tbody>
+						</table>
+                            <div id="toolbar" class="btn-group">
+                                <a class="btn btn-danger" onclick="deleteSelected()">
+                                    <i class="glyphicon"></i> Xóa mục đã chọn
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                    <script>
+                        const deleteOne = (id)=>{
+                            if(confirm("Are you sure you want to delete?")){
+                                window.location.href=`/admin/comments/delete/${id}`;
+                            }else{ return false}
+                        }
+                        const deleteSelected =()=>{
+                        const layId = document.querySelectorAll('.selected-unbox:checked');
+                        const layIds = Array.from(layId).map(i =>i.value)
+                        if(layIds.length === 0){
+                            alert('Bạn chưa chọn ô nào!')
+                            return false
+                        }else if(confirm('Are you sure you want to delete?')){
+                            document.getElementById('selectForm').submit();
+                        }else {
+                            return false;
+                        }}
+                    </script>
+                    <div class="panel-footer">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <%if(page >1){%>
+                                <li class="page-item"><a class="page-link" href="/admin/comments?page=<%=page-1%>">&laquo;</a></li>
+                                <%}%>
+                                <%for(let num of pages){%>
+                                    <%if(num==="..."){%>
+                                        <li class="page-item <%=num===page?'active':''%>"><span><%=num%></span></li>
+                                    <%}
+                                    else{%>
+                                        <li class="page-item <%=num===page?'active':''%>"><a class="page-link" href="/admin/comments?page=<%=num%>"><%=num%></a></li>
+                                    <%}%>
+                                
+                                <%}%>
+                                <%if(page<totalPages){%>
+                                <li class="page-item"><a class="page-link" href="/admin/comments?page=<%=page+1%>">&raquo;</a></li>
+                                <%}%>
+                            </ul>
+                        </nav>
+                    </div>
+				</div>
+			</div>
+		</div><!--/.row-->	
+	</div>	<!--/.main-->
+
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-table.js"></script>
+<%-include("../layout/footer.ejs")%>

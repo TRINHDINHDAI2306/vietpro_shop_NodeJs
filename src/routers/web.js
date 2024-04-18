@@ -65,6 +65,7 @@ router.post(
   ProductController.update
 );
 router.get("/admin/products/delete/:id", ProductController.del);
+router.post("/admin/products/delete-selected", ProductController.delSelected);
 
 // router users
 
@@ -96,6 +97,7 @@ router.post(
   UserController.update
 );
 router.get("/admin/users/delete/:id", UserController.del);
+router.post("/admin/users/delete-selected", UserController.delSelected);
 
 // router category
 
@@ -208,12 +210,13 @@ router.get("/admin/advertise/delete/:id", AdvertiseController.del);
 // order
 router.get("/admin/orders", OrderController.index);
 router.get("/admin/orders/delete/:id", OrderController.del);
+router.post("/admin/orders/delete-selected", OrderController.delSelected);
+
 // Router Site
 router.get("/", SiteController.home);
 router.get("/category-:slug.:id", SiteController.category);
 router.get("/product-:slug.:id", SiteController.product);
 router.post("/product-:slug.:id", SiteController.comment);
-router.post("/subscribe", SiteController.sbmCmt);
 router.get("/search", SiteController.search);
 router.get("/cart", SiteController.cart);
 router.post("/add-to-cart", SiteController.addToCart);

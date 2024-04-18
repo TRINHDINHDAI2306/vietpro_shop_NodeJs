@@ -1,6 +1,7 @@
 const CategoryModel = require("../models/categoryModel");
 const pagination = require("../../common/pagination");
 const index = async (req, res) => {
+  const count =1;
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
   const skip = page * limit - limit;
@@ -12,6 +13,7 @@ const index = async (req, res) => {
   const totalPages = Math.ceil(totalRows / limit);
   res.render("admin/categories/category", {
     categories,
+    count,
     pages: pagination(page, limit, totalRows),
     page,
     totalPages,

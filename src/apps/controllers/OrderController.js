@@ -6,6 +6,7 @@ const path = require("path");
 const slug = require("slug");
 const fs = require("fs");
 const index = async (req, res) => {
+  const count =1;
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
   const skip = page * limit - limit;
@@ -17,6 +18,7 @@ const index = async (req, res) => {
   const totalPages = Math.ceil(totalRows / limit);
   res.render("admin/orders/order", {
     orders,
+    count,
     pages: pagination(page, limit, totalRows),
     page,
     totalPages,
@@ -27,7 +29,13 @@ const del = async (req, res) => {
   await OrderModel.deleteOne({ _id: id });
   res.redirect("/admin/orders");
 };
+const delSelected = async (req, res) => {
+  const id = req.body.selectedOrders;
+  await OrderModel.deleteMany({ _id: { $in: id } });
+  res.redirect("/admin/orders");
+};
 module.exports = {
   index,
   del,
+  delSelected
 };

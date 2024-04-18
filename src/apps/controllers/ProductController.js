@@ -6,6 +6,7 @@ const path = require("path");
 const slug = require("slug");
 const fs = require("fs");
 const index = async (req, res) => {
+  const count = 1;
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
   const skip = page * limit - limit;
@@ -18,6 +19,7 @@ const index = async (req, res) => {
   const totalPages = Math.ceil(totalRows / limit);
   res.render("admin/products/product", {
     products,
+    count,
     pages: pagination(page, limit, totalRows),
     page,
     totalPages,
@@ -93,6 +95,11 @@ const del = async (req, res) => {
   await ProductModel.deleteOne({ _id: id });
   res.redirect("/admin/products");
 };
+const delSelected = async (req, res) => {
+  const id = req.body.selectedProducts;
+  await ProductModel.deleteMany({ _id: { $in: id } });
+  res.redirect("/admin/products");
+};
 module.exports = {
   index,
   create,
@@ -100,4 +107,5 @@ module.exports = {
   edit,
   update,
   del,
+  delSelected,
 };

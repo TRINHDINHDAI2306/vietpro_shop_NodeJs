@@ -37,7 +37,7 @@
 									<tbody>
 										<%for(let category of categories){%>
 										<tr>
-											<td style="">1</td>
+											<td style=""><%=count++%></td>
 											<td style=""><%=category.title%></td>
 											<td class="form-group">
 												<a href="/admin/categories/edit/<%=category._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>

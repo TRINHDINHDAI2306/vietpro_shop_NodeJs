@@ -18,16 +18,17 @@
 				<h1 class="page-header">Danh sách giỏ hàng</h1>
 			</div>
 		</div><!--/.row-->
-		<!-- <div id="toolbar" class="btn-group">
-            <a href="/admin/orders/create" class="btn btn-success">
-                <i class="glyphicon glyphicon-plus"></i> Thêm Ảnh
+        <div id="toolbar" class="btn-group">
+            <a class="btn btn-danger" onclick="deleteSelected()">
+                <i class="glyphicon"></i> Xóa mục đã chọn
             </a>
-        </div>  -->
+        </div>
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="panel panel-default">
 					<div class="panel-body">
-                        <table 
+                        <form action="/admin/orders/delete-selected" id="selectForm" method="post">
+                            <table 
                             data-toolbar="#toolbar"
                             data-toggle="table">
 
@@ -39,44 +40,52 @@
                                 <th>Số lượng</th>
                                 <th>Đơn giá</th>
                                 <th>Tổng tiền</th>
-                                <th>Hành động</th>
+                                <th colspan="2">Hành động</th>
 						    </tr>
                             </thead>
                             <tbody>
                                 <%for(let order of orders){%>
-                                    <tr>
-                                        <td style=""></td>
-                                        <td style=""><p>
-                                                        <b>Khách hàng:</b> <%=order.full_name%><br>
-                                                        <b>Điện thoại:</b> <%=order.phone%><br>
-                                                        <b>Email:</b> <%=order.email%><br>
-                                                        <b>Địa chỉ:</b> <%=order.address%><br>
-                                                    </p>
-                                        <td>
                                         <% for (let item of order.items) { %>
+                                    <tr>
+                                        <% if(item == order.items[0]) { %>
+                                        <td rowspan="<%=order.items.length%>"><%=count++%></td>
+                                        <td rowspan="<%=order.items.length%>">
+                                            <p>
+                                                <b>Khách hàng:</b> <%=order.full_name%><br>
+                                                <b>Điện thoại:</b> <%=order.phone%><br>
+                                                <b>Email:</b> <%=order.email%><br>
+                                                <b>Địa chỉ:</b> <%=order.address%><br>
+                                            </p>
+                                        </td>  
+                                        <%}%>
+                                        <td >
                                             <p><%= item.name %></p>
-                                        <% } %>
                                         </td> 
                                         <td>
-                                        <% for (let item of order.items) { %>
                                             <p><%= item.qty %></p>
-                                        <% } %>
                                         </td>
                                         <td>
-                                        <% for (let item of order.items) { %>
                                             <p><%=Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price).replace('₫', 'VND') %></p>
-                                        <% } %>
                                         </td>
-                                        <td style=""><%=Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.total_price).replace('₫', 'VND')%></td>
-                                        <td class="form-group">
-                                            <a href="/admin/orders/edit/<%=order._id%>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                            <a href="/admin/orders/delete/<%=order._id%>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                        <% if(item == order.items[0]) { %>
+                                        <td rowspan="<%=order.items.length%>"><%=Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.total_price).replace('₫', 'VND')%></td>
+                                        <td rowspan="<%=order.items.length%>" class="form-group text-center">
+                                            <a onclick="deleteOne('<%=order._id%>')"class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                         </td>
+                                        <td rowspan="<%=order.items.length%>" class="d-flex align-items-center justify-content-center">
+                                            <input class="selected-unbox" type="checkbox" name="selectedOrders[]" value="<%= order._id %>">
+                                        </td>
+                                        <%}%>
+                                        
                                     </tr>
+                                    <%}%>
                                     <%}%>
                                  </tbody>
 						</table>
+                        </form>
                     </div>
+                        <%-include("../layout/select.ejs", {router: "orders"})%>
+
                     <div class="panel-footer">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">

@@ -1,3 +1,4 @@
+const axios = require('axios');
 const ProductModel = require("../models/productModel");
 const CategoryModel = require("../models/categoryModel");
 const CommentModel = require("../models/commentModel");
@@ -66,46 +67,56 @@ const product = async (req, res) => {
   });
 };
 const comment = async (req, res) => {
-  const { id } = req.params;
-  let checkComment = req.body.com_body;
-  const abusiveWords = ["clm", "ml", "Dm"];
-  for (let word of abusiveWords) {
-    checkComment = checkComment.replace(
-      new RegExp(word, "gi"),
-      "*".repeat(word.length)
-    );
-  }
-  const comment = {
-    prd_id: id,
-    email: req.body.com_mail,
-    full_name: req.body.com_name,
-    body: checkComment,
-  };
-  await new CommentModel(comment).save();
-  res.redirect(req.path);
-};
-const sbmCmt = (req, res) => {
-  if(req.body.captcha === undefined || req.body.captcha===null||req.body.captcha==='')
-  {
-    return res.json({
-      success: false,
-      message: "Failed Captcha verification",
-    });
-  }
-  const secretKey = "6Le_kr0pAAAAAKZdiyQz4vNiudBJ5oiQkP7pUlA3";
-  const verifyUrl =
-    `https://google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${req.body.captcha}&remoteip=${req.connection.remoteAddress}`;
-  request(verifyUrl, (err, response, body) => {
-    body = JSON.parse(body);
-    if (body.success !== undefined && !body.success) {
-      return res.json({
-        success: false,
-        message: "Failed Captcha verification",
-      });
+  try {
+    // Kiểm tra reCAPTCHA
+    const recaptchaToken = req.body["g-recaptcha-response"];
+    if (!recaptchaToken) {
+      console.log("Vui lòng xác nhận bạn không phải là robot");
+      return res
+        .status(400)
+        .json({ error: "Vui lòng xác nhận bạn không phải là robot" });
     }
-    return res.json({ success: true, message: "Captcha Passed" });
-  });
+    const secretKey = "6LccLb8pAAAAAJp_4D7PjdZlQGQmPboq-PTpaDM2";
+    const recaptchaVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`;
+    const recaptchaResponse = await axios.post(recaptchaVerifyUrl);
+    const recaptchaData = recaptchaResponse.data;
+    if (!recaptchaData.success) {
+      console.log("reCAPTCHA không hợp lệ");
+      return res.status(400).json({ error: "reCAPTCHA không hợp lệ" });
+    }
 
+    // Kiểm tra dữ liệu nhập vào
+    const { com_name, com_mail, com_body } = req.body;
+    if (!com_name || !com_mail || !com_body) {
+      console.log("Vui lòng điền đầy đủ thông tin !");
+      return res
+        .status(400)
+        .json({ error: "Vui lòng điền đầy đủ thông tin !" });
+    }
+    // Kiểm tra từ ngữ không phù hợp
+    let checkComment = com_body;
+    const abusiveWords = ["clm", "ml", "Dm"];
+    for (let word of abusiveWords) {
+      checkComment = checkComment.replace(
+        new RegExp(word, "gi"),
+        "*".repeat(word.length)
+      );
+    }
+
+    // Lưu comment vào cơ sở dữ liệu
+    const commentData = {
+      prd_id: req.params.id,
+      email: com_mail,
+      full_name: com_name,
+      body: checkComment,
+    };
+    await new CommentModel(commentData).save();
+    res.status(200).json({ redirectUrl: req.path });
+    // res.redirect(req.path);
+  } catch (error) {
+    console.error("Error processing comment:", error);
+    res.status(500).send("Internal server error");
+  }
 };
 const search = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -221,7 +232,6 @@ module.exports = {
   product,
   search,
   comment,
-  sbmCmt,
   cart,
   addToCart,
   updateItemCart,

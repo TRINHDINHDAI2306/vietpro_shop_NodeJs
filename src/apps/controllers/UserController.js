@@ -2,6 +2,7 @@ const CategoryModel = require("../models/categoryModel");
 const UserModel = require("../models/userModel");
 const pagination = require("../../common/pagination");
 const index = async (req, res) => {
+  const count =1;
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
   const skip = page * limit - limit;
@@ -10,6 +11,7 @@ const index = async (req, res) => {
   const totalPages = Math.ceil(totalRows / limit);
   res.render("admin/users/user", {
     users,
+    count,
     pages: pagination(page, limit, totalRows),
     page,
     totalPages,
@@ -73,6 +75,11 @@ const del = async (req, res) => {
   await UserModel.deleteOne({ _id: id });
   res.redirect("/admin/users");
 };
+const delSelected = async (req, res) => {
+  const id = req.body.selectedUsers;
+  await UserModel.deleteMany({ _id: { $in: id } });
+  res.redirect("/admin/users");
+};
 module.exports = {
   index,
   create,
@@ -80,4 +87,5 @@ module.exports = {
   edit,
   update,
   del,
+  delSelected,
 };

@@ -4,7 +4,7 @@ const CommentModel = require("../models/commentModel");
 const moment = require("moment");
 const index = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const count = 0;
+  const count = 1;
   const limit = 10;
   const skip = page * limit - limit;
   const comments = await CommentModel.find()

@@ -12,7 +12,14 @@
 				<li class="active">Danh sách bình luận</li>
 			</ol>
 		</div><!--/.row-->
-		
+		<div id="toolbar" class="btn-group">
+            <a class="btn btn-danger" onclick="deleteSelected()"  style="border-radius: 5px;">
+                <i class="glyphicon"></i> Xóa mục đã chọn
+            </a>
+            <a class="btn btn-warning" onclick="selectedCheckbox()" style="margin-left: 5px; border-radius: 5px;">
+                <i class="glyphicon"></i> Chọn tất cả
+            </a>
+        </div>
 		<div class="row">
 			<div class="col-lg-12">
 				<h1 class="page-header">Danh sách bình luận</h1>
@@ -43,7 +50,7 @@
                             <tbody>
                                 <%for(let comment of comments){%>
                                     <tr>
-                                        <td><%=count+=1%></td>
+                                        <td><%=count++%></td>
                                         <td style=""><%=comment.full_name%></td>
                                         <td style=""><%=comment.email%></td>
                                         <td><%=comment?.prd_id?.name%></td>
@@ -61,31 +68,10 @@
                                     <%}%>
                                  </tbody>
 						</table>
-                            <div id="toolbar" class="btn-group">
-                                <a class="btn btn-danger" onclick="deleteSelected()">
-                                    <i class="glyphicon"></i> Xóa mục đã chọn
-                                </a>
-                            </div>
+                            
                         </form>
                     </div>
-                    <script>
-                        const deleteOne = (id)=>{
-                            if(confirm("Are you sure you want to delete?")){
-                                window.location.href=`/admin/comments/delete/${id}`;
-                            }else{ return false}
-                        }
-                        const deleteSelected =()=>{
-                        const layId = document.querySelectorAll('.selected-unbox:checked');
-                        const layIds = Array.from(layId).map(i =>i.value)
-                        if(layIds.length === 0){
-                            alert('Bạn chưa chọn ô nào!')
-                            return false
-                        }else if(confirm('Are you sure you want to delete?')){
-                            document.getElementById('selectForm').submit();
-                        }else {
-                            return false;
-                        }}
-                    </script>
+                    <%-include("../layout/select.ejs", {router: "comments"})%>
                     <div class="panel-footer">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">

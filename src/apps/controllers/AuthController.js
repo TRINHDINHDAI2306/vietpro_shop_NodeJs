@@ -1,31 +1,48 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+
+
 const getLogin = (req, res) => {
   res.render("admin/login", { data: {} });
 };
+// const postLogin = async (req, res) => {
+//   let { email, password } = req.body;
+//   const user = await UserModel.findOne({ email });
+//   if (!user) {
+//     const error = "Tài khoản không tồn tại!";
+//     return res.render("admin/login", { data: { error } });
+//   }
+//   if (await bcrypt.compare(password, user.password)) {
+//     req.session.email = email;
+//     req.session.password = password;
+//     if (user.role === "member") {
+//       return res.redirect("/");
+//     } else {
+//       return res.redirect("/admin/dashboard");
+//     }
+//   } else {
+//     const error = "Mật khẩu không đúng!";
+//     res.render("admin/login", { data: { error } });
+//   }
+  
+// };
 const postLogin = async (req, res) => {
   let { email, password } = req.body;
+  let error;
+
   const user = await UserModel.findOne({ email });
   if (!user) {
-    const error = "Tài khoản không tồn tại!";
+    error = "Email hoặc Password không đúng";
     return res.render("admin/login", { data: { error } });
   }
-
-  const passwordMatch = await bcrypt.compare(password, user.password);
-
-  if (passwordMatch) {
-    req.session.email = email;
-    req.session.password = password;
-    if (user.role === "member") {
-      return res.redirect("/");
-    } else {
-      return res.redirect("/admin/dashboard");
-    }
-  } else {
-    const error = "Mật khẩu không đúng!";
-    res.render("admin/login", { data: { error } });
+  const passwordCheck = await bcrypt.compare(password, user.password);
+  if (!passwordCheck) {
+    error = "Password không đúng";
+    return res.render("admin/login", { data: { error } });
   }
-  
+  req.session.email = email;
+  req.session.password = password;
+  return res.redirect("/admin/dashboard");
 };
 const getRegister = async (req, res) => {
   res.render("admin/register", { data: {} });

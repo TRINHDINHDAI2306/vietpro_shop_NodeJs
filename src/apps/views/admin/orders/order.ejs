@@ -69,14 +69,13 @@
                                         </td>
                                         <% if(item == order.items[0]) { %>
                                         <td rowspan="<%=order.items.length%>"><%=Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.total_price).replace('₫', 'VND')%></td>
-                                        <td rowspan="<%=order.items.length%>" class="form-group text-center">
+                                        <td rowspan="<%=order.items.length%>" class="form-group text-center" style="vertical-align: middle">
                                             <a onclick="deleteOne('<%=order._id%>')"class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                         </td>
-                                        <td rowspan="<%=order.items.length%>" class="d-flex align-items-center justify-content-center">
+                                        <td rowspan="<%=order.items.length%>" style="vertical-align: middle">
                                             <input class="selected-unbox" type="checkbox" name="selectedOrders[]" value="<%= order._id %>">
                                         </td>
                                         <%}%>
-                                        
                                     </tr>
                                     <%}%>
                                     <%}%>

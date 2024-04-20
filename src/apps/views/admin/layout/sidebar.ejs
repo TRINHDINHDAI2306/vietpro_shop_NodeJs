@@ -13,7 +13,43 @@
 			<li><a href="/admin/comments"><svg class="glyph stroked two messages"><use xlink:href="#stroked-two-messages"/></svg> Quản lý bình luận</a></li>
 			<li><a href="/admin/advertise"><svg class="glyph stroked chain"><use xlink:href="#stroked-chain"/></svg> Quản lý quảng cáo</a></li>
 			<li><a href="/admin/slides"><svg class="glyph stroked chain"><use xlink:href="#stroked-bag"/></svg> Quản lý Slides</a></li>
-            <li><a href="setting.html"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"/></svg> Cấu hình</a></li>
+            <li><a href="/admin/configs"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"/></svg> Cấu hình</a></li>
         </ul>
+		<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const menuItems = document.querySelectorAll('.nav.menu li');
 
+      // Hàm để đánh dấu mục menu là active dựa trên URL
+      const markActiveMenuItem = () => {
+        const currentPath = window.location.pathname; // Lấy đường dẫn hiện tại của trang
+
+        menuItems.forEach(item => {
+          const menuItemLink = item.querySelector('a');
+          const href = menuItemLink.getAttribute('href');
+
+          // Kiểm tra nếu href của mục menu trùng với đường dẫn hiện tại của trang
+          if (href === currentPath) {
+            item.classList.add('active'); // Đánh dấu mục menu là active
+          } else {
+            item.classList.remove('active'); // Xóa active nếu không trùng
+          }
+        });
+      };
+      // Gọi hàm đánh dấu mục menu active khi trang được tải hoàn toàn
+      markActiveMenuItem();
+
+      // Xử lý sự kiện click trên các mục menu
+      menuItems.forEach(item => {
+        item.addEventListener('click', (event) => {
+          // Xóa lớp active trên tất cả các mục menu
+          menuItems.forEach(menuItem => {
+            menuItem.classList.remove('active');
+          });
+
+          // Đánh dấu mục menu được click là active
+          item.classList.add('active');
+        });
+      });
+    });
+  </script>
 	</div><!--/.sidebar-->

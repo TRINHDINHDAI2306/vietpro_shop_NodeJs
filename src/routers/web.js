@@ -13,10 +13,9 @@ const CommentController = require("../apps/controllers/CommentController");
 const SlideController = require("../apps/controllers/SlideController");
 const AdvertiseController = require("../apps/controllers/AdvertiseController");
 const OrderController = require("../apps/controllers/OrderController");
+const ConfigController = require("../apps/controllers/ConfigController");
 // test
 const TestController = require("../apps/controllers/TestController");
-router.get("/testform", TestController.testForm);
-router.post("/testform", TestController.actionForm);
 // Router admin
 router.get("/admin/login", AuthMiddlewares.checkLogin, AuthController.getLogin);
 router.post(
@@ -24,10 +23,11 @@ router.post(
   AuthMiddlewares.checkLogin,
   AuthController.postLogin
 );
-router.get("/admin/logout", AuthMiddlewares.checkAdmin, AuthController.logout);
+router.get("/admin/logout", //AuthMiddlewares.checkAdmin,
+ AuthController.logout);
 router.get(
   "/admin/dashboard",
-  AuthMiddlewares.checkAdmin,
+  // AuthMiddlewares.checkAdmin,
   AdminController.index
 );
 router.get("/admin/register", AuthController.getRegister);
@@ -212,6 +212,15 @@ router.get("/admin/orders", OrderController.index);
 router.get("/admin/orders/delete/:id", OrderController.del);
 router.post("/admin/orders/delete-selected", OrderController.delSelected);
 
+// Configs
+
+router.get("/admin/configs", ConfigController.index);
+router.get("/admin/configs/update/:id",ConfigController.update)
+router.post(
+  "/admin/configs/store/:id",
+  UploadMiddlewares.fields([{ name: "logo_header" }, { name: "logo_footer" }]),
+  ConfigController.store
+);
 // Router Site
 router.get("/", SiteController.home);
 router.get("/category-:slug.:id", SiteController.category);

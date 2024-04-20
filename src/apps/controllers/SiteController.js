@@ -71,7 +71,6 @@ const comment = async (req, res) => {
     // Kiểm tra reCAPTCHA
     const recaptchaToken = req.body["g-recaptcha-response"];
     if (!recaptchaToken) {
-      console.log("Vui lòng xác nhận bạn không phải là robot");
       return res
         .status(400)
         .json({ error: "Vui lòng xác nhận bạn không phải là robot" });
@@ -81,14 +80,12 @@ const comment = async (req, res) => {
     const recaptchaResponse = await axios.post(recaptchaVerifyUrl);
     const recaptchaData = recaptchaResponse.data;
     if (!recaptchaData.success) {
-      console.log("reCAPTCHA không hợp lệ");
       return res.status(400).json({ error: "reCAPTCHA không hợp lệ" });
     }
 
     // Kiểm tra dữ liệu nhập vào
     const { com_name, com_mail, com_body } = req.body;
     if (!com_name || !com_mail || !com_body) {
-      console.log("Vui lòng điền đầy đủ thông tin !");
       return res
         .status(400)
         .json({ error: "Vui lòng điền đầy đủ thông tin !" });
@@ -114,7 +111,6 @@ const comment = async (req, res) => {
     res.status(200).json({ redirectUrl: req.path });
     // res.redirect(req.path);
   } catch (error) {
-    console.error("Error processing comment:", error);
     res.status(500).send("Internal server error");
   }
 };

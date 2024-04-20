@@ -7,6 +7,7 @@ const AdminController = require("../apps/controllers/AdminController");
 const AuthController = require("../apps/controllers/AuthController");
 const ProductController = require("../apps/controllers/ProductController");
 const UserController = require("../apps/controllers/UserController");
+const CustomerController = require("../apps/controllers/CustomerController");
 const CategoryController = require("../apps/controllers/CategoryController");
 const SiteController = require("../apps/controllers/SiteController");
 const CommentController = require("../apps/controllers/CommentController");
@@ -99,6 +100,14 @@ router.post(
 router.get("/admin/users/delete/:id", UserController.del);
 router.post("/admin/users/delete-selected", UserController.delSelected);
 
+// customer 
+
+router.get("/admin/customers", CustomerController.index);
+router.get("/admin/customers/register", CustomerController.register);
+router.post("/admin/customers/store", CustomerController.store);
+router.get("/admin/customers/success", CustomerController.success);
+router.get("/admin/customers/login", CustomerController.login);
+router.post("/admin/customers/login", CustomerController.postLogin);
 // router category
 
 router.get(

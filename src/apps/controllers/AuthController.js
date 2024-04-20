@@ -1,54 +1,51 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
-
 const getLogin = (req, res) => {
-  res.render("admin/login", { data: {} });
+  const rememberEmail = req.cookies.rememberEmail;
+  const rememberPassword = req.cookies.rememberPassword;
+  res.render("admin/login", { data: {}, rememberEmail, rememberPassword });
 };
-// const postLogin = async (req, res) => {
-//   let { email, password } = req.body;
-//   const user = await UserModel.findOne({ email });
-//   if (!user) {
-//     const error = "Tài khoản không tồn tại!";
-//     return res.render("admin/login", { data: { error } });
-//   }
-//   if (await bcrypt.compare(password, user.password)) {
-//     req.session.email = email;
-//     req.session.password = password;
-//     if (user.role === "member") {
-//       return res.redirect("/");
-//     } else {
-//       return res.redirect("/admin/dashboard");
-//     }
-//   } else {
-//     const error = "Mật khẩu không đúng!";
-//     res.render("admin/login", { data: { error } });
-//   }
-  
-// };
+
 const postLogin = async (req, res) => {
-  let { email, password } = req.body;
-  let error;
+  let { email, password, remember } = req.body;
 
   const user = await UserModel.findOne({ email });
   if (!user) {
-    error = "Email hoặc Password không đúng";
+    const error = "Tài khoản không tồn tại!";
     return res.render("admin/login", { data: { error } });
   }
-  const passwordCheck = await bcrypt.compare(password, user.password);
-  if (!passwordCheck) {
-    error = "Password không đúng";
+  const isPasswordMatch=await bcrypt.compare(password, user.password);
+  if (!isPasswordMatch) {
+    const error = "Mật khẩu không đúng!";
     return res.render("admin/login", { data: { error } });
   }
-  req.session.email = email;
-  req.session.password = password;
-  return res.redirect("/admin/dashboard");
+    req.session.email = email;
+    req.session.password = password;
+    if (remember === "true") {
+      // Set cookie for email if "remember" is checked
+      const hashedPassword = await bcrypt.hash(password, 10);
+      res.cookie("rememberEmail", email, { maxAge: 7 * 24 * 60 * 60 * 1000 }); // Expires in 7 days
+      res.cookie("rememberPassword", hashedPassword, {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      }); // Expires in 7 days
+    } else {
+      // Clear cookie if "remember" is unchecked
+      res.clearCookie("rememberEmail");
+      res.clearCookie("rememberPassword");
+    }
+    if (user.role === "member") {
+      return res.redirect("/");
+    } else {
+      return res.redirect("/admin/dashboard");
+    }
 };
+
 const getRegister = async (req, res) => {
   res.render("admin/register", { data: {} });
 };
 const store = async (req, res) => {
-  const { full_name, email,role, password, re_password } = req.body;
+  const { full_name, email, role, password, re_password } = req.body;
   let error = null;
   const checkUser = await UserModel.findOne({ email });
   if (checkUser) {
@@ -63,7 +60,7 @@ const store = async (req, res) => {
   const user = {
     email: email,
     password: hashed,
-    role:role,
+    role: role,
     full_name: full_name,
     re_password: re_password,
   };
@@ -71,8 +68,7 @@ const store = async (req, res) => {
   res.redirect("/admin/success");
 };
 const success = async (req, res) => {
-  res.render("admin/success"); 
-
+  res.render("admin/success");
 };
 const logout = (req, res) => {
   req.session.destroy();

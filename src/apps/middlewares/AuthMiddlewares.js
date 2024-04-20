@@ -12,7 +12,6 @@ const checkMemberRole = async (req, res, next) => {
   const { email, password } = req.session;
   if (email && password) {
     const user = await UserModel.findOne({ email });
-    console.log(user);
     // Nếu có user
     if (user) {
       if (user.role === "Member") {

@@ -36,6 +36,7 @@
                     name="email"
                     type="email"
                     autofocus
+                    value="<%=rememberEmail%>"
                   />
                 </div>
                 <div class="form-group">
@@ -44,7 +45,7 @@
                     placeholder="Mật khẩu"
                     name="password"
                     type="password"
-                    value=""
+                    value="<%=rememberPassword%>"
                   />
                 </div>
                 <div class="checkbox">
@@ -52,7 +53,8 @@
                     <input
                       name="remember"
                       type="checkbox"
-                      value="Remember Me"
+                      value="true"
+                      <% if (rememberEmail) { %>checked<% } %>
                     />Nhớ tài khoản
                   </label>
                 </div>

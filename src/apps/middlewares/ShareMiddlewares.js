@@ -52,7 +52,7 @@ const shareMw = {
     next();
   },
   nameProducts: async (req, res, next) => {
-    const featuredProducts = await ProductModel.find({ featured: true });
+    const featuredProducts = await ProductModel.find({ featured: true, is_stock: true });
     res.locals.nameProducts = featuredProducts.map((i) => i.name);
     res.locals.thumbnailProducts = featuredProducts.map((i) => i.thumbnail);
     next();

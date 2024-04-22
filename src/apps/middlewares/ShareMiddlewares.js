@@ -54,6 +54,7 @@ const shareMw = {
   nameProducts: async (req, res, next) => {
     const featuredProducts = await ProductModel.find({ featured: true });
     res.locals.nameProducts = featuredProducts.map((i) => i.name);
+    res.locals.thumbnailProducts = featuredProducts.map((i) => i.thumbnail);
     next();
   },
 };

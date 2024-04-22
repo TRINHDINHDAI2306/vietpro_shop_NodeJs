@@ -10,9 +10,9 @@
           <form id="formSearchHeader" action="/search" class="form-inline">
             <input name="keyword" class="form-control mt-3" type="text" placeholder="Tìm kiếm" aria-label="Search">
             <div class="autocom-box">
-              <li>keyword 1</li>
+              <!-- <li>keyword 1</li>
               <li>keyword 2</li>
-              <li>keyword 3</li>
+              <li>keyword 3</li> -->
             </div>
             <button class="btn btn-danger mt-3" type="submit">Tìm kiếm</button>
           </form>
@@ -58,7 +58,6 @@
     const inputSearch = document.querySelector('[name="keyword"]')
     const suggBox = document.querySelector('.autocom-box')
     const dataContainer = document.getElementById('data-container');
-
     const nameProducts = JSON.parse(dataContainer.dataset.nameProducts);
     let dataSuggest = []
 
@@ -67,15 +66,15 @@
       if (keyword) {
         dataSuggest = nameProducts.filter((data) => {
           return data.toLocaleLowerCase().startsWith(keyword.toLocaleLowerCase())
-        }).slice(0, 3)
+        }).slice(0, 5)
         dataSuggest = dataSuggest.map((data) => {
           return data = '<li>' + data + '</li>'
         })
         formSearchHeader.classList.add('active')
         showSuggestions(dataSuggest)
-        let allList = suggBox.querySelectorAll('li')
+        let allList = suggBox.querySelectorAll('li')    //allList là mảng chứa những thẻ li tại "keyword 1 2 3 "
         for (let i = 0; i < allList.length; i++) {
-          allList[i].setAttribute('onclick', 'select(this)')
+          allList[i].setAttribute('onclick', 'select(this)')  //gọi từng thằng 1 và gán thuôc tính onclick với phương thức là select
         }
       } else {
         formSearchHeader.classList.remove('active')

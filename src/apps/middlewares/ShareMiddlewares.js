@@ -10,7 +10,6 @@ const ProductModel = require("../models/productModel");
 const shareMw = {
   categories: async (req, res, next) => {
     res.locals.categories = await CategoryModel.find();
-
     next();
   },
   emailUser: async (req, res, next) => {
@@ -53,7 +52,8 @@ const shareMw = {
     next();
   },
   nameProducts: async (req, res, next) => {
-    res.locals.nameProducts = await ProductModel.find({featured: true});
+    const featuredProducts = await ProductModel.find({ featured: true });
+    res.locals.nameProducts = featuredProducts.map((i) => i.name);
     next();
   },
 };

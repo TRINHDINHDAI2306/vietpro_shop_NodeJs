@@ -1,9 +1,12 @@
 const CategoryModel = require("../models/categoryModel");
-const SlideModel = require("../models/slideModel");
 const UserModel = require("../models/userModel");
-const AdvertiseModel = require("../models/advertiseModel");
+const ConfigsModel = require("../models/configModel");
+const SliderModel = require("../models/sliderModel");
+const BannerModel = require("../models/advertiseModel");
 const CustomerModel = require("../models/customerModel");
-const ConfigModel = require('../models/configModel');
+const AdvertiseModel = require("../models/advertiseModel");
+const ProductModel = require("../models/productModel");
+
 const shareMw = {
   categories: async (req, res, next) => {
     res.locals.categories = await CategoryModel.find();
@@ -34,12 +37,12 @@ const shareMw = {
     next();
   },
   config: async (req, res, next) => {
-    res.locals.config = await ConfigModel.findOne();
+    res.locals.config = await ConfigsModel.findOne();
     next();
   },
 
   sliders: async (req, res, next) => {
-    res.locals.sliders = await SlideModel.find();
+    res.locals.sliders = await SliderModel.find();
 
     next();
   },
@@ -47,6 +50,10 @@ const shareMw = {
   advertise: async (req, res, next) => {
     res.locals.advertise = await AdvertiseModel.find();
 
+    next();
+  },
+  nameProducts: async (req, res, next) => {
+    res.locals.nameProducts = await ProductModel.find({featured: true});
     next();
   },
 };

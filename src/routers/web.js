@@ -11,12 +11,13 @@ const CustomerController = require("../apps/controllers/CustomerController");
 const CategoryController = require("../apps/controllers/CategoryController");
 const SiteController = require("../apps/controllers/SiteController");
 const CommentController = require("../apps/controllers/CommentController");
-const SlideController = require("../apps/controllers/SlideController");
+const SlideController = require("../apps/controllers/SliderController");
 const AdvertiseController = require("../apps/controllers/AdvertiseController");
 const OrderController = require("../apps/controllers/OrderController");
 const ConfigController = require("../apps/controllers/ConfigController");
 // test
 const TestController = require("../apps/controllers/TestController");
+const SlideModel = require("../apps/models/sliderModel");
 // Router admin
 router.get("/admin/login", AuthMiddlewares.checkLogin, AuthController.getLogin);
 router.post(
@@ -165,30 +166,35 @@ router.post(
 router.get("/admin/comments/delete/:id", CommentController.del);
 router.post("/admin/comments/delete-selected", CommentController.delSelected);
 
-router.get("/admin/slides", SlideController.index);
+router.get("/admin/sliders", SlideController.index);
 router.get(
-  "/admin/slides/create",
+  "/admin/sliders/create",
   // AuthMiddlewares.checkAdmin,
   SlideController.create
 );
 router.post(
-  "/admin/slides/store",
+  "/admin/sliders/store",
   UploadMiddlewares.single("image"),
   // AuthMiddlewares.checkAdmin,
   SlideController.store
 );
 router.get(
-  "/admin/slides/edit/:id",
+  "/admin/sliders/edit/:id",
   // AuthMiddlewares.checkAdmin,
   SlideController.edit
 );
+router.get(
+  "/admin/sliders/approve/:id",
+  // AuthMiddlewares.checkAdmin,
+  SlideController.approve
+);
 router.post(
-  "/admin/slides/update/:id",
+  "/admin/sliders/update/:id",
   UploadMiddlewares.single("image"),
   // AuthMiddlewares.checkAdmin,
   SlideController.update
 );
-router.get("/admin/slides/delete/:id", SlideController.del);
+router.get("/admin/sliders/delete/:id", SlideController.del);
 
 // Advertis
 router.get("/admin/advertise", AdvertiseController.index);

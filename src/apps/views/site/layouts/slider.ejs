@@ -4,7 +4,7 @@
            	  <!-- Indicators -->
            	  <ul class="carousel-indicators">
            	    <%for(let i=0; i< sliders.length; i++){%>
-           	    <% if (sliders[i].status) { %>
+           	    <% if (sliders[i].role) { %>
            	    <li data-target="#slide" data-slide-to="<%=i%>" <% if (i === 0) { %>class="active" <% } %>></li>
            	    <%}%>
 				<%}%>
@@ -14,9 +14,9 @@
            	  <div class="carousel-inner">
            	    <% let index = 0; %>
            	    <%for(let slider of sliders){%>
-           	    <%if(slider.status){%>
+           	    <%if(slider.role){%>
            	    <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-           	      <img class="d-block w-100" src="../Uploads/images/<%=slider.image%>" alt="Vietpro Academy">
+           	      <img class="d-block w-100" src="../uploads/images/<%=slider.image%>" alt="Vietpro Academy">
            	    </div>
            	    <% index++; %>
            	    <%}%>

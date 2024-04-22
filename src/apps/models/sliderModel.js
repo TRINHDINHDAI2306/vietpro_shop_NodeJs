@@ -1,5 +1,5 @@
 const mongoose = require("../../common/database")();
-const slideSchema = new mongoose.Schema({
+const sliderSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -13,5 +13,5 @@ const slideSchema = new mongoose.Schema({
     default: false,
   },
 });
-const SlideModel = mongoose.model("Slides", slideSchema, "slides");
+const SlideModel = mongoose.model("Sliders", sliderSchema, "sliders");
 module.exports = SlideModel;

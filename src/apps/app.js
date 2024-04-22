@@ -30,6 +30,7 @@ app.use(
   shareMw.sliders,
   shareMw.advertise,
   shareMw.emailCustomer,
+  shareMw.nameProducts,
 );
 // Hien tai, da cau hinh den thu muc tinh /static = src/public
 app.use("/static", express.static(__dirname + "/../public"));
